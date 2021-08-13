@@ -29,9 +29,9 @@ async function handleConsumeStat(ev, messages) {
     const results = await getConsumeSum();
     console.log(results);
 
-    if(r) {
+    if(results) {
         let str ="";
-        for(row of r) {
+        for(row of results) {
             str += row.kind + "|" + row.sum + "円|" + row.date.split('+')[0] + "/n";
         }
         return line_client.replyMessage(ev.replyToken, {
@@ -76,7 +76,7 @@ async function getConsumeSum() {
     }
 
     const r = await pg_client.query(q)
-    pg_client.end();
+    pg_client.release();
     return r ? r.rows : null;
 };
 
