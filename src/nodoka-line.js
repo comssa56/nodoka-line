@@ -49,6 +49,8 @@ async function createConsume(kind, price, callback) {
 
     //   callback();
     // });
+    callback();
+    
     pg_client.query(q)
     .then( ()=>{pg_client.end();} )
     .then( callback() )
