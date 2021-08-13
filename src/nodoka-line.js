@@ -6,7 +6,7 @@ const line_client = new line.Client(conf.get('line-config'));
 
 
 async function createConsumeCallback(ev) {
-    return ()=>{
+    return (result)=>{
         return line_client.replyMessage(ev.replyToken, {
             type: "text",
             text: messages + "\nを保存完了しました。"
@@ -40,15 +40,21 @@ async function createConsume(kind, price, callback) {
         values: [kind, price],
     }
 
-    pg_client.query(q, (err, res) => {
-      if (err) throw err;
-      for (let row of res.rows) {
-        console.log(JSON.stringify(row));
-      }
-      pg_client.end();
+    // pg_client.query(q, (err, res) => {
+    //   if (err) throw err;
+    //   for (let row of res.rows) {
+    //     console.log(JSON.stringify(row));
+    //   }
+    //   pg_client.end();
 
-      callback();
-    });
+    //   callback();
+    // });
+    pg_client.query(q)
+    .then( ()=>{pg_client.end();} )
+    .then( createConsumeCallback(ev) )
+    .catch( (err)=>{throw err} );
+
+
 };
 
 async function handleEvent(ev) {
