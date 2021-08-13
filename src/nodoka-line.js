@@ -1,6 +1,6 @@
 const result = require('./result.js');
 
-async function echoman(client, ev) {
+async function handleEvent(client, ev) {
     const pro =  await client.getProfile(ev.source.userId);
     return client.replyMessage(ev.replyToken, {
       type: "text",
@@ -11,22 +11,19 @@ async function echoman(client, ev) {
 
 
 exports.LineBot = function(client, req, res) {
-        const r = new result.Result(200, '');
-        r.response(res);
+    const r = new result.Result(200, '');
+    r.response(res);
     
-        const events = req.body.events;
-        const promises = [];
-        for (let i = 0, l = events.length; i < l; i++) {
+    const events = req.body.events;
+    const promises = [];
+    for (let i = 0, l = events.length; i < l; i++) {
         const ev = events[i];
         console.log("handle:" + JSON.stringify(ev));
+        promises.push(echoman(client, ev.handle));
+    }
+    Promise.all(promises).then(console.log("pass"));
 
-        promises.push(
-            echoman(ev.handle)
-          );
-        }
-        Promise.all(promises).then(console.log("pass"));
-    
-        console.log("pass"); 
+    console.log("pass"); 
 };
     
 
