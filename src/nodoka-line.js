@@ -4,20 +4,28 @@ const conf = require('./config.js');
 const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
+
 async function handleConsume(messages) {
     const kind = messages[1];
     const price = messages[2];
 
     if(kind && price) 
     {
-        await createConsume(kind, price);
-        return true;
+        await createConsume(kind, price, ()=>{
+            return line_client.replyMessage(ev.replyToken, {
+                type: "text",
+                text: messages + "\nを保存完了しました。"
+              })              
+        });
     }
 
-    return false;
+    return line_client.replyMessage(ev.replyToken, {
+        type: "text",
+        text: "理解できなんだ\n\n消費\n食料orその他\n価格（半角数値）\nで入力するんだぞい"
+      })          
 }
 
-async function createConsume(kind, price) {
+async function createConsume(kind, price, callback) {
     console.log("consume:" + kind + "," + price);
     pg_client = conf.get('psql');
     pg_client.connect();
@@ -33,6 +41,8 @@ async function createConsume(kind, price) {
         console.log(JSON.stringify(row));
       }
       pg_client.end();
+
+      callback();
     });
 };
 
@@ -45,19 +55,7 @@ async function handleEvent(ev) {
     switch(messages[0]) {
     case "消費":
         console.log("message consume");
-        const r =handleConsume(messages).await;
-        if(!r) {
-            return line_client.replyMessage(ev.replyToken, {
-                type: "text",
-                text: "理解できなんだ\n\n消費\n食料\n価格\nで入力するんだぞい"
-              })          
-        }
-        return line_client.replyMessage(ev.replyToken, {
-            type: "text",
-            text: messages + "\nを保存完了しました。"
-          })          
-
-        break;
+        return handleConsume(messages).await;
     default:
         console.log("message default");
     }
