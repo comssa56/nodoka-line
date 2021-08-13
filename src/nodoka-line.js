@@ -32,7 +32,7 @@ async function handleConsumeStat(ev, messages) {
     if(results) {
         let str ="";
         for(row of results) {
-            str += row.kind + "|" + row.sum + "円|" + row.date.split('+')[0] + "/n";
+            str += row.kind + "|" + row.sum + "円|" + row.date.split('T')[0] + "/n";
         }
         return line_client.replyMessage(ev.replyToken, {
             type: "text",
@@ -76,7 +76,7 @@ async function getConsumeSum() {
     }
 
     const r = await pg_client.query(q)
-    pg_client.release();
+    pg_client.end();
     return r ? r.rows : null;
 };
 
