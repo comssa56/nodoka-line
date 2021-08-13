@@ -5,18 +5,23 @@ const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
 
-async function handleConsume(messages) {
+async function createConsumeCallback(ev) {
+    return ()=>{
+        return line_client.replyMessage(ev.replyToken, {
+            type: "text",
+            text: messages + "\nを保存完了しました。"
+          })              
+    };
+}
+
+// 消費を保存する
+async function handleConsume(ev, messages) {
     const kind = messages[1];
     const price = messages[2];
 
     if(kind && price) 
     {
-        await createConsume(kind, price, ()=>{
-            return line_client.replyMessage(ev.replyToken, {
-                type: "text",
-                text: messages + "\nを保存完了しました。"
-              })              
-        });
+        await createConsume(kind, price, createConsumeCallback(ev));
     }
 
     return line_client.replyMessage(ev.replyToken, {
@@ -55,7 +60,7 @@ async function handleEvent(ev) {
     switch(messages[0]) {
     case "消費":
         console.log("message consume");
-        return handleConsume(messages).await;
+        return handleConsume(ev, messages).await;
     default:
         console.log("message default");
     }
