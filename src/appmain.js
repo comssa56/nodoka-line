@@ -1,9 +1,17 @@
 
 const result = require('./result.js');
+const nodoka = require('./nodoka-line.js');
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
+console.log("tk" + process.env.LINE_ACCESS_TOKEN)
+const line = require("@line/bot-sdk"); 
+const config = {
+  channelAccessToken: process.env.LINE_ACCESS_TOKEN,
+  channelSecret: process.env.LINE_SECRET_KEY
+};
+const client = new line.Client(config); // 追加
 
 const routing = function(app)
 {
@@ -11,6 +19,8 @@ const routing = function(app)
         const r = new result.Result(200, 'Hello, world!');
         r.response(res);
     });
+
+    app.post('/hook', line.middleware(config), (req, res) => nodoka.LineBot(client, req, res));
 
     // app.get('/tw/test', (req, res) => {
     //     const user = '@com_ssa56';
@@ -67,7 +77,6 @@ const routing = function(app)
     //     }
     // });
 
-
 }
 
 
@@ -84,11 +93,9 @@ exports.execute = function(app){
     // Start the server
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
-    console.log('Press Ctrl+C to quit.');
-
-
-});
+        console.log(`App listening on port ${PORT}`);
+        console.log('Press Ctrl+C to quit.');
+    });
 }
 
 
