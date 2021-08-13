@@ -10,10 +10,29 @@ const jsonParser = bodyParser.json();
 
 const line = conf.get('line');
 
+async function db_connect_test(){
+    pg_client = conf.get('psql');
+    pg_client.connect();
+
+    pg_client.query('SELECT 1;', (err, res) => {
+      if (err) throw err;
+      for (let row of res.rows) {
+        console.log(JSON.stringify(row));
+      }
+      client.end();
+    });}
+
+
 const routing = function(app)
 {
     app.get('/', (req, res) => {
         const r = new result.Result(200, 'Hello, world!');
+        r.response(res);
+    });
+
+    app.get('/db_test', async (req, res) => {
+        const r = new result.Result(200, 'Hello, world!');
+        await db_connect_test();
         r.response(res);
     });
 
