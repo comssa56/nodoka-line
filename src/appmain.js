@@ -19,8 +19,9 @@ async function db_connect_test(){
       for (let row of res.rows) {
         console.log(JSON.stringify(row));
       }
-      client.end();
-    });}
+      pg_client.end();
+    });
+}
 
 
 const routing = function(app)
