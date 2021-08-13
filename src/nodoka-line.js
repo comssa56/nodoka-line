@@ -5,15 +5,6 @@ const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
 
-const createConsumeCallback = function(replyToken, messages) {
-    return async function(result){
-        return line_client.replyMessage(replyToken, {
-            type: "text",
-            text: messages + "\nを保存完了しました。"
-          })              
-    };
-}
-
 // 消費を保存する
 async function handleConsume(ev, messages) {
     const kind = messages[1];
@@ -21,16 +12,20 @@ async function handleConsume(ev, messages) {
 
     if(kind && price) 
     {
-        await createConsume(kind, price, createConsumeCallback(ev.replyToken, messages));
+        await createConsume(kind, price);
+        return line_client.replyMessage(ev.replyToken, {
+            type: "text",
+            text: messages + "\nを保存完了しました。"
+        })              
+    } else {
+        return line_client.replyMessage(ev.replyToken, {
+            type: "text",
+            text: "理解できなんだ\n\n消費\n食料orその他\n価格（半角数値）\nで入力するんだぞい"
+        })              
     }
-
-    return line_client.replyMessage(ev.replyToken, {
-        type: "text",
-        text: "理解できなんだ\n\n消費\n食料orその他\n価格（半角数値）\nで入力するんだぞい"
-      })          
 }
 
-async function createConsume(kind, price, callback) {
+async function createConsume(kind, price) {
     console.log("consume:" + kind + "," + price);
     pg_client = conf.get('psql');
     pg_client.connect();
@@ -50,12 +45,9 @@ async function createConsume(kind, price, callback) {
     //   callback();
     // });
 
-    pg_client.query(q)
+    await pg_client.query(q)
     .then( ()=>{pg_client.end();} )
-    .then( callback )
     .catch( (err)=>{throw err} );
-
-
 };
 
 async function handleEvent(ev) {
