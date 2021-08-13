@@ -29,7 +29,7 @@ exports.LineBot = function(req, res) {
     // Promise.all(promises).then(console.log("pass"));
     Promise
     .all(req.body.events.map(handleEvent))
-    .then((result) => res.json(result));
+    .then((result) => {console.log(result);});
 };
     
 
