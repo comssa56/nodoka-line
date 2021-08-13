@@ -21,7 +21,7 @@ exports.LineBot = function(client, req, res) {
         console.log("handle:" + JSON.stringify(ev));
 
         promises.push(
-            echoman(ev)
+            echoman(ev.handle)
           );
         }
         Promise.all(promises).then(console.log("pass"));
