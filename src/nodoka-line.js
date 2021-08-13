@@ -27,7 +27,7 @@ async function createConsume(kind, price) {
         values: [kind, price],
     }
 
-    pg_client.query('q', (err, res) => {
+    pg_client.query(q, (err, res) => {
       if (err) throw err;
       for (let row of res.rows) {
         console.log(JSON.stringify(row));
