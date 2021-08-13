@@ -18,7 +18,7 @@ exports.LineBot = function(client, req, res) {
         const promises = [];
         for (let i = 0, l = events.length; i < l; i++) {
         const ev = events[i];
-        console.log("handle:" + ev);
+        console.log("handle:" + JSON.stringify(ev));
 
         promises.push(
             echoman(ev)
