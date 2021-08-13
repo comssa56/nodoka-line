@@ -31,7 +31,7 @@ async function handleConsumeStat(ev, messages) {
 
     return line_client.replyMessage(ev.replyToken, {
         type: "text",
-        text: results,
+        text: JSON.stringify(results),
     }); 
 }
 
@@ -64,7 +64,7 @@ async function getConsumeSum() {
 
     const r = await pg_client.query(q)
     pg_client.end();
-    return r;
+    return { 'results': r ? r.rows : null};;
 };
 
 
