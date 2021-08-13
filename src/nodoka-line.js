@@ -18,6 +18,7 @@ async function handleConsume(messages) {
 }
 
 async function createConsume(kind, price) {
+    console.log("consume:" + kind + "," + price);
     pg_client = conf.get('psql');
     pg_client.connect();
 
@@ -44,12 +45,18 @@ async function handleEvent(ev) {
     switch(messages[0]) {
     case "消費":
         console.log("message consume");
-        if(!handleConsume(messages)) {
+        const r =handleConsume(messages).await;
+        if(!r) {
             return line_client.replyMessage(ev.replyToken, {
                 type: "text",
                 text: "理解できなんだ\n\n消費\n食料\n価格\nで入力するんだぞい"
               })          
         }
+        return line_client.replyMessage(ev.replyToken, {
+            type: "text",
+            text: messages + "\nを保存完了しました。"
+          })          
+
         break;
     default:
         console.log("message default");
