@@ -25,6 +25,16 @@ async function handleConsume(ev, messages) {
     }
 }
 
+async function handleConsumeStat(ev, messages) {
+    const results = await getConsumeSum();
+    console.log(results);
+
+    return line_client.replyMessage(ev.replyToken, {
+        type: "text",
+        text: results,
+    }); 
+}
+
 async function createConsume(kind, price) {
     console.log("consume:" + kind + "," + price);
     pg_client = conf.get('psql');
@@ -35,20 +45,28 @@ async function createConsume(kind, price) {
         values: [kind, price],
     }
 
-    // pg_client.query(q, (err, res) => {
-    //   if (err) throw err;
-    //   for (let row of res.rows) {
-    //     console.log(JSON.stringify(row));
-    //   }
-    //   pg_client.end();
-
-    //   callback();
-    // });
-
-    await pg_client.query(q)
-    .then( ()=>{pg_client.end();} )
-    .catch( (err)=>{throw err} );
+    const r = await pg_client.query(q)
+    pg_client.end();
+    return r;
 };
+
+async function getConsumeSum() {
+    pg_client = conf.get('psql');
+    pg_client.connect();
+
+    const q = {
+        text: "SELECT kind, sum(price), date FROM" 
+        + "(SELECT kind, price,date_trunc(insert_date) as date FROM tbl_consume) A"
+        + "GROUP BY date ORDER BY kind, date"
+        ,
+        values: [],
+    }
+
+    const r = await pg_client.query(q)
+    pg_client.end();
+    return r;
+};
+
 
 async function handleEvent(ev) {
     
@@ -60,6 +78,9 @@ async function handleEvent(ev) {
     case "消費":
         console.log("message consume");
         return handleConsume(ev, messages).await;
+    case "消費確認":
+        console.log("message consume stat");
+        return handleConsumeStat(ev, messages).await;
     default:
         console.log("message default");
     }
@@ -76,16 +97,7 @@ async function handleEvent(ev) {
 exports.LineBot = function(req, res) {
     const r = new result.Result(200, '');
     r.response(res);
-    
-    // const events = req.body.events;
-    // const promises = [];
-    // for (let i = 0, l = events.length; i < l; i++) {
-    //     const ev = events[i];
-    //     console.log("handle...");
-    //     console.log(JSON.stringify(ev));
-    //     promises.push(handleEvent(ev));
-    // }
-    // Promise.all(promises).then(console.log("pass"));
+
     Promise
     .all(req.body.events.map(handleEvent))
     .then((result) => {console.log(result);});
