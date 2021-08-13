@@ -10,7 +10,7 @@ const line_config = {
 const { Client } = require('pg');
 const psql_client = new Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: true,
+  ssl: { require : true, rejectUnauthorized: false },
 });
 
 
