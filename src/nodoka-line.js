@@ -55,9 +55,9 @@ async function getConsumeSum() {
     pg_client.connect();
 
     const q = {
-        text: "SELECT kind, sum(price), date FROM" 
-        + "(SELECT kind, price,date_trunc(insert_date) as date FROM tbl_consume) A"
-        + "GROUP BY date ORDER BY kind, date"
+        text: "SELECT kind, sum(price), date FROM " 
+        + "(SELECT kind, price, date_trunc('day', insert_date) as date FROM tbl_consume) A "
+        + "GROUP BY kind, date ORDER BY kind, date"
         ,
         values: [],
     }
