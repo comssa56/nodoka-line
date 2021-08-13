@@ -17,8 +17,10 @@ exports.LineBot = function(client, req, res) {
         const events = req.body.events;
         const promises = [];
         for (let i = 0, l = events.length; i < l; i++) {
-          const ev = events[i];
-          promises.push(
+        const ev = events[i];
+        console.log("handle:" + ev);
+
+        promises.push(
             echoman(ev)
           );
         }
