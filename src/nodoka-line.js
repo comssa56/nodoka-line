@@ -5,7 +5,7 @@ const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
 
-async function createConsumeCallback(replyToken, messages) {
+const createConsumeCallback = function(replyToken, messages) {
     return async function(result){
         return line_client.replyMessage(replyToken, {
             type: "text",
@@ -49,11 +49,10 @@ async function createConsume(kind, price, callback) {
 
     //   callback();
     // });
-    callback();
 
     pg_client.query(q)
     .then( ()=>{pg_client.end();} )
-    .then( callback() )
+    .then( callback )
     .catch( (err)=>{throw err} );
 
 
