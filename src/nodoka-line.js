@@ -29,10 +29,23 @@ async function handleConsumeStat(ev, messages) {
     const results = await getConsumeSum();
     console.log(results);
 
-    return line_client.replyMessage(ev.replyToken, {
-        type: "text",
-        text: JSON.stringify(results),
-    }); 
+    if(r) {
+        let str ="";
+        for(row of r) {
+            str += row.kind + "|" + row.sum + "円|" + row.date.split('+')[0] + "/n";
+        }
+        return line_client.replyMessage(ev.replyToken, {
+            type: "text",
+            text: str,
+        }); 
+    
+    } else {
+        return line_client.replyMessage(ev.replyToken, {
+            type: "text",
+            text: "記録がありません",
+        }); 
+    }
+
 }
 
 async function createConsume(kind, price) {
@@ -64,7 +77,7 @@ async function getConsumeSum() {
 
     const r = await pg_client.query(q)
     pg_client.end();
-    return { 'results': r ? r.rows : null};;
+    return r ? r.rows : null;
 };
 
 
