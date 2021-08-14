@@ -56,7 +56,7 @@ async function handleConsumeStat(ev, messages) {
 
 async function createConsume(kind, price) {
     console.log("consume:" + kind + "," + price);
-    pg_client = getPgClient();
+    pg_client = await getPgClient();
     pg_client.connect();
 
     const q = {
@@ -70,7 +70,7 @@ async function createConsume(kind, price) {
 };
 
 async function getConsumeSum() {
-    pg_client = getPgClient();
+    pg_client = await getPgClient();
     pg_client.connect();
 
     const q = {
