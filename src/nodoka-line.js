@@ -22,7 +22,7 @@ async function handleConsume(ev, messages) {
     } else {
         return line_client.replyMessage(
             ev.replyToken, 
-            nodoka.createTextMessage("理解できなんだ\n\n消費\n食料orその他\n価格（半角数値）\nで入力する")
+            nodoka.createNodokaTextMessage("理解できなんだ\n\n消費\n食料orその他\n価格（半角数値）\nで入力する")
         );
     }
 }
@@ -37,12 +37,12 @@ async function handleConsumeStat(ev, messages) {
             str += row.kind + "\t" + row.sum + "円\t" + row.date + "\n";
         }
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createTextMessage(str)
+            nodoka.createNodokaTextMessage(str)
             ); 
     
     } else {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createTextMessage("記録がありません")
+            nodoka.createNodokaTextMessage("記録がありません")
         ); 
     }
 
@@ -91,7 +91,7 @@ async function handleEvent(ev) {
 
     const pro =  await line_client.getProfile(ev.source.userId);
     return line_client.replyMessage(ev.replyToken, 
-        nodoka.createTextMessage(`${pro.displayName}さん、今「${ev.message.text}」って言いました`),
+        nodoka.createNodokaTextMessage(`${pro.displayName}さん、今「${ev.message.text}」って言いました`),
     )
 }
 

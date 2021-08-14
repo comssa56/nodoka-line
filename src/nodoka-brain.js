@@ -1,24 +1,12 @@
 
+export function strNodokafy(text) {
+    return text + "だぞい";
+}
 
-class NodokaBrain {
-
-    nodokafy(text) {
-        return text + "だぞい";
+export function createNodokaTextMessage(message){
+    return {
+        type: "text",
+        text: strNodokafy(message),                
     }
-
-    createTextMessage(message){
-        return {
-            type: "text",
-            text: this.nodokafy(message),                
-        }
-    }
-
 }
 
-const getNodokaBrain = ()=>{
-    return new NodokaBrain();
-}
-
-exports.createTextMessage = (message)=>{
-    return getNodokaBrain().createTextMessage(message);
-}
