@@ -45,7 +45,7 @@ exports.execJson = async (query) =>{
     result = null;
     try { 
         await db.begin();
-        result = await db.exec(query);
+        result = await db.execJson(query);
         await db.commit();
     } catch (e) {
         console.log(e);
