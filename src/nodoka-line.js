@@ -63,7 +63,7 @@ async function createConsume(kind, price) {
 
 async function getConsumeSum() {
     const q = {
-        text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') FROM " 
+        text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') as date FROM " 
         + "(SELECT kind, price, date_trunc('month', insert_date) as date FROM tbl_consume) A "
         + "GROUP BY kind, date ORDER BY kind, date"
         ,
