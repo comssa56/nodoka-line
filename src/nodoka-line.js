@@ -1,15 +1,10 @@
 const result = require('./result.js');
 const conf = require('./config.js');
+const postgres = require('./postgres.js');
 
 const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
-
-const { Client } = require('pg');
-
-async function getPgClient() {
-    return new Client(conf.get('pg-config'));
-} 
 
 // 消費を保存する
 async function handleConsume(ev, messages) {
@@ -56,32 +51,30 @@ async function handleConsumeStat(ev, messages) {
 
 async function createConsume(kind, price) {
     console.log("consume:" + kind + "," + price);
-    pg_client = await getPgClient();
-    pg_client.connect();
+    pg_client = await postgres.getDBAccessor();
 
     const q = {
         text: 'INSERT INTO tbl_consume(kind, price) VALUES($1, $2)',
         values: [kind, price],
     }
 
-    const r = await pg_client.query(q)
+    const r = await pg_client.execJson(q);
     pg_client.end();
     return r;
 };
 
 async function getConsumeSum() {
-    pg_client = await getPgClient();
-    pg_client.connect();
+    pg_client = await postgres.getDBAccessor();
 
     const q = {
-        text: "SELECT kind, sum(price), date FROM " 
+        text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') FROM " 
         + "(SELECT kind, price, date_trunc('month', insert_date) as date FROM tbl_consume) A "
         + "GROUP BY kind, date ORDER BY kind, date"
         ,
         values: [],
     }
 
-    const r = await pg_client.query(q)
+    const r = await pg_client.execJson(q);
     pg_client.end();
     return r ? r.rows : null;
 };
