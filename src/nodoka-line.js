@@ -15,10 +15,13 @@ async function handleConsume(ev, messages) {
     if(kind && price) 
     {
         await createConsume(kind, price);
-        return line_client.replyMessage(
-            ev.replyToken, 
-            nodoka.createTextMessage(messages + "\nを保存完了")
+        return line_client.broadcast(
+            nodoka.createNodokaTextMessage(messages + "\nを保存完了")
         );
+        // return line_client.replyMessage(
+        //     ev.replyToken, 
+        //     nodoka.createNodokaTextMessage(messages + "\nを保存完了")
+        // );
     } else {
         return line_client.replyMessage(
             ev.replyToken, 
