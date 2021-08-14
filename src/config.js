@@ -7,11 +7,10 @@ const line_config = {
 
 
 // psql
-const { Client } = require('pg');
-const psql_client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { require : true, rejectUnauthorized: false },
-});
+const pg_config = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: { require : true, rejectUnauthorized: false },
+};
 
 
 let conf = [];
@@ -34,7 +33,7 @@ exports.init = function() {
 
     add('line', line);
     add('line-config', line_config);
-    add('psql', psql_client);
+    add('pg-config', pg_config);
     
     console.log("initialize config");
     initialized = true;

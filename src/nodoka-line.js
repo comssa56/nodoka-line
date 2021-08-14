@@ -5,6 +5,12 @@ const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
 
+const { Client } = require('pg');
+
+async function getPgClient() {
+    return new Client(conf.get('pg-config'));
+} 
+
 // 消費を保存する
 async function handleConsume(ev, messages) {
     const kind = messages[1];
@@ -50,7 +56,7 @@ async function handleConsumeStat(ev, messages) {
 
 async function createConsume(kind, price) {
     console.log("consume:" + kind + "," + price);
-    pg_client = conf.get('psql');
+    pg_client = getPgClient();
     pg_client.connect();
 
     const q = {
@@ -64,7 +70,7 @@ async function createConsume(kind, price) {
 };
 
 async function getConsumeSum() {
-    pg_client = conf.get('psql');
+    pg_client = getPgClient();
     pg_client.connect();
 
     const q = {
