@@ -39,3 +39,20 @@ exports.getDBAccessor = async ()=>{
     await db.init();
     return db;
 }
+
+exports.execJson = async (query) =>{
+    db = await this.getDBAccessor();
+    result = null;
+    try { 
+        await db.begin();
+        result = await db.exec(query);
+        await db.commit();
+    } catch (e) {
+        console.log(e);
+        await db.rollback();
+        throw e;
+    } finally {
+        await db.release();
+    }
+    return result;
+}

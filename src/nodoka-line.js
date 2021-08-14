@@ -51,21 +51,17 @@ async function handleConsumeStat(ev, messages) {
 
 async function createConsume(kind, price) {
     console.log("consume:" + kind + "," + price);
-    pg_client = await postgres.getDBAccessor();
-
+ 
     const q = {
         text: 'INSERT INTO tbl_consume(kind, price) VALUES($1, $2)',
         values: [kind, price],
     }
 
-    const r = await pg_client.execJson(q);
-    pg_client.end();
+    const r = await postgres.execJson(q);
     return r;
 };
 
 async function getConsumeSum() {
-    pg_client = await postgres.getDBAccessor();
-
     const q = {
         text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') FROM " 
         + "(SELECT kind, price, date_trunc('month', insert_date) as date FROM tbl_consume) A "
@@ -73,10 +69,8 @@ async function getConsumeSum() {
         ,
         values: [],
     }
-
-    const r = await pg_client.execJson(q);
-    pg_client.end();
-    return r ? r.rows : null;
+    const r = await postgres.execJson(q);
+    return r;
 };
 
 
