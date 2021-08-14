@@ -1,12 +1,14 @@
 
-export function strNodokafy(text) {
+exports.strNodokafy = (text) => {
     return text + "だぞい";
 }
 
-export function createNodokaTextMessage(message){
+exports.createNodokaTextMessage = (message)=>{
     return {
         type: "text",
         text: strNodokafy(message),                
     }
 }
+
+
 
