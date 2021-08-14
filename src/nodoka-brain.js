@@ -1,6 +1,6 @@
 
 function strNodokafy(text) {
-    return text + "だぞい";
+    return text + "だなも";
 }
 
 function createNodokaTextMessage(message) {
