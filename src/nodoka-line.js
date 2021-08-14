@@ -38,7 +38,7 @@ async function handleConsumeStat(ev, messages) {
     if(results) {
         let str ="";
         for(row of results) {
-            str += row.kind + "|" + row.sum + "円|" + JSON.stringify(row.date).split('T')[0] + "/n";
+            str += row.kind + "\t" + row.sum + "円\t" + JSON.stringify(row.date).split('T')[0] + "\n";
         }
         return line_client.replyMessage(ev.replyToken, {
             type: "text",
