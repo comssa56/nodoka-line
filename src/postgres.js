@@ -1,15 +1,11 @@
 const conf = require('./config.js'); 
-const { Client } = require('pg');
+const { Pool } = require('pg');
+const pool = new Pool(conf.get('pg-config'));
 
-async function getPgClient() {
-    return new Client(conf.get('pg-config'));
-}
 
 class Postgres {
     async init() {
-        this.client = await getPgClient();
-        await this.client.connect();        
-        return this.client;
+        this.client = await pool.connect();
     }
 
     async exec(query, params = []) {
@@ -21,8 +17,8 @@ class Postgres {
     }
 
 
-    async end() {
-        await this.client.end();
+    async release() {
+        await this.client.release(true);
     }
 
     async begin() {
