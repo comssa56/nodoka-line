@@ -1,9 +1,13 @@
 const conf = require('./config.js'); 
 const { Client } = require('pg');
 
+async function getPgClient() {
+    return new Client(conf.get('pg-config'));
+}
+
 class Postgres {
     async init() {
-        this.client = new Client(conf.get('pg-config')).await;
+        this.client = await getPgClient();
         await this.client.connect();        
         return this.client;
     }
