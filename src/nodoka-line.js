@@ -1,6 +1,7 @@
 const result = require('./result.js');
 const conf = require('./config.js');
 const postgres = require('./postgres.js');
+const nodoka = require('./nodoka-brain.js')
 
 const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
@@ -14,15 +15,15 @@ async function handleConsume(ev, messages) {
     if(kind && price) 
     {
         await createConsume(kind, price);
-        return line_client.replyMessage(ev.replyToken, {
-            type: "text",
-            text: messages + "\nを保存完了しました。"
-        })              
+        return line_client.replyMessage(
+            ev.replyToken, 
+            nodoka.createTextMessage(messages + "\nを保存完了")
+        );
     } else {
-        return line_client.replyMessage(ev.replyToken, {
-            type: "text",
-            text: "理解できなんだ\n\n消費\n食料orその他\n価格（半角数値）\nで入力するんだぞい"
-        })              
+        return line_client.replyMessage(
+            ev.replyToken, 
+            nodoka.createTextMessage("理解できなんだ\n\n消費\n食料orその他\n価格（半角数値）\nで入力する")
+        );
     }
 }
 
@@ -35,16 +36,14 @@ async function handleConsumeStat(ev, messages) {
         for(row of results) {
             str += row.kind + "\t" + row.sum + "円\t" + row.date + "\n";
         }
-        return line_client.replyMessage(ev.replyToken, {
-            type: "text",
-            text: str,
-        }); 
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createTextMessage(str)
+            ); 
     
     } else {
-        return line_client.replyMessage(ev.replyToken, {
-            type: "text",
-            text: "記録がありません",
-        }); 
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createTextMessage("記録がありません")
+        ); 
     }
 
 }
@@ -65,8 +64,7 @@ async function getConsumeSum() {
     const q = {
         text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') as date FROM " 
         + "(SELECT kind, price, date_trunc('month', insert_date) as date FROM tbl_consume) A "
-        + "GROUP BY kind, date ORDER BY kind, date"
-        ,
+        + "GROUP BY kind, date ORDER BY kind, date",
         values: [],
     }
     const r = await postgres.execJson(q);
@@ -92,10 +90,9 @@ async function handleEvent(ev) {
     }
 
     const pro =  await line_client.getProfile(ev.source.userId);
-    return line_client.replyMessage(ev.replyToken, {
-      type: "text",
-      text: `${pro.displayName}さん、今「${ev.message.text}」って言いました？`
-    })
+    return line_client.replyMessage(ev.replyToken, 
+        nodoka.createTextMessage(`${pro.displayName}さん、今「${ev.message.text}」って言いました`),
+    )
 }
 
 
