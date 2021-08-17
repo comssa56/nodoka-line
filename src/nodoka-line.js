@@ -1,5 +1,6 @@
 const result = require('./result.js');
 const conf = require('./config.js');
+const util = require('./util.js');
 const postgres = require('./postgres.js');
 const nodoka = require('./nodoka-brain.js')
 
@@ -7,21 +8,46 @@ const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
 
+
 // 消費を保存する
 async function handleConsume(ev, messages) {
     const kind = messages[1];
     const price = messages[2];
+    const day = messages[3];
 
     if(kind && price) 
     {
-        await createConsume(kind, price);
-        return line_client.broadcast(
-            nodoka.createNodokaTextMessage(messages + "\nを保存完了")
-        );
-        // return line_client.replyMessage(
-        //     ev.replyToken, 
-        //     nodoka.createNodokaTextMessage(messages + "\nを保存完了")
-        // );
+        if(!util.isIntStr(price)) {
+            return line_client.replyMessage(
+                ev.replyToken, 
+                nodoka.createNodokaTextMessage("価格は半角数字だけで記載してください")
+            );    
+        }
+
+
+        if(day)
+        {
+            const d = util.ShortStrDate(day);
+            if(day.length!=8 || !d) {
+                return line_client.replyMessage(
+                    ev.replyToken, 
+                    nodoka.createNodokaTextMessage("日付は半角数字8桁で入力してください")
+                );    
+            }
+
+            await createConsume(kind, price, d.get().format());
+            return line_client.broadcast(
+                nodoka.createNodokaTextMessage(messages + "\nを保存完了")
+            );    
+            
+        }
+        else
+        {
+            await createConsume(kind, price);
+            return line_client.broadcast(
+                nodoka.createNodokaTextMessage(messages + "\nを保存完了")
+            );    
+        }
     } else {
         return line_client.replyMessage(
             ev.replyToken, 
@@ -63,10 +89,23 @@ async function createConsume(kind, price) {
     return r;
 };
 
+async function createConsumeWithDate(kind, price,date) {
+    console.log("consume:" + kind + "," + price + ',' + date);
+ 
+    const q = {
+        text: 'INSERT INTO tbl_consume(kind, price, consume_time) VALUES($1, $2, $3)',
+        values: [kind, price, date],
+    }
+
+    const r = await postgres.execJson(q);
+    return r;
+};
+
+
 async function getConsumeSum() {
     const q = {
         text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') as date FROM " 
-        + "(SELECT kind, price, date_trunc('month', insert_date) as date FROM tbl_consume) A "
+        + "(SELECT kind, price, date_trunc('month', consume_time) as date FROM tbl_consume) A "
         + "GROUP BY kind, date ORDER BY kind, date",
         values: [],
     }

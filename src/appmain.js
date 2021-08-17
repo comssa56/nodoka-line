@@ -1,3 +1,4 @@
+const util = require('./util.js');
 
 const conf = require('./config.js'); 
 conf.init();
