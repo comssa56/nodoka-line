@@ -3,10 +3,10 @@ const moment = require("moment");
 
 class ShortStrDate {
     constructor(year, month, day) {
-        this.m = moment("1970-01-01 00:00:00");
-        if(year) this.m =this.m.year(year);
-        if(month) this.m = this.m.month(month);
-        if(day) this.m = this.m.day(day);
+        if(!year) year = '1970';
+        if(!month) month = '01';
+        if(!day) day = '01';
+        this.m = moment(year + "-" + month + "-" + day + " 00:00:00");
     }
 
     get() {
