@@ -35,7 +35,7 @@ async function handleConsume(ev, messages) {
                 );    
             }
 
-            await createConsume(kind, price, d.get().format());
+            await createConsumeWithDate(kind, price, d.get().format());
             return line_client.broadcast(
                 nodoka.createNodokaTextMessage(messages + "\nを保存完了")
             );    
