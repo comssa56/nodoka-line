@@ -38,6 +38,7 @@ const event2 = {events : [
 ]};
 
 exports.Test = ()=>{
-    util.json_request('localhost', 8080, '/hook', 'POST', event1).await;
-    util.json_request('localhost', 8080, '/hook', 'POST', event2).await;
+    const PORT = process.env.PORT || 8080;
+    util.json_request('localhost', PORT, '/hook', 'POST', event1).await;
+    util.json_request('localhost', PORT, '/hook', 'POST', event2).await;
 }
