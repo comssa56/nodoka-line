@@ -1,4 +1,5 @@
 const moment = require("moment");
+const http = require('http');
 
 
 class ShortStrDate {
@@ -64,4 +65,45 @@ exports.sleep = async function(_ms) {
     await _sleep(_ms);
 }
 
+
+
+/*
+* httpリクエストのヘルパー
+*/
+async function json_request(host, port, path, method, body) {
+    let data_str = JSON.stringify(body);
+    headers = {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(data_str)
+    };
+    await request(host, port, path, method, headers, data_str);
+}
+
+async function request(host, port, path, method, headers, body) {
+    let options = {
+        host: host,
+        port: port,
+        path: path,
+        method: method,
+        headers: headers,
+    };
+
+    let req = http.request(options, (res) => {
+        // console.log('STATUS: ' + res.statusCode);
+        // console.log('HEADERS: ' + JSON.stringify(res.headers));
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+          console.log('BODY: ' + chunk);
+        });
+      });
+    req.on('error', (e) => {
+        console.log('problem with request: ' + e.message);
+    });
+    req.write(body);
+    req.end();
+}
+
+exports.json_request = async (host, port, path, method, body)=> {
+    await json_request(host, port, path, method, body);
+};
 

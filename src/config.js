@@ -7,10 +7,24 @@ const line_config = {
 
 
 // psql
-const pg_config = {
-    connectionString: process.env.DATABASE_URL,
-    ssl: { require : true, rejectUnauthorized: false },
-};
+let pg_config = null;
+if(process.env.IS_DEV) {
+    pg_config = {
+            user: 'postgres',
+            host: 'localhost',
+//            database: 'mydata',
+            password: 'root',
+            port: 5432,
+            max: 10,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 5000,
+    };
+} else {
+    pg_config = {
+        connectionString: process.env.DATABASE_URL,
+        ssl: { require : true, rejectUnauthorized: false },
+    };
+}
 
 
 let conf = [];

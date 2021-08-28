@@ -11,6 +11,10 @@ const jsonParser = bodyParser.json();
 
 const line = conf.get('line');
 
+const line_client = require('./nodoka-line-client.js').Create();
+
+const test = require('./test/test.js');
+
 async function db_connect_test(){
     pg_client = conf.get('psql');
     pg_client.connect();
@@ -32,13 +36,22 @@ const routing = function(app)
         r.response(res);
     });
 
+    app.get('/test', (req, res) => {
+        test.Test();
+        const r = new result.Result(200, 'Hello, world!');
+    });
+
     app.get('/db_test', async (req, res) => {
         const r = new result.Result(200, 'Hello, world!');
         await db_connect_test();
         r.response(res);
     });
 
-    app.post('/hook', line.middleware(conf.get('line-config')), (req, res) => nodoka.LineBot(req, res));
+    if(process.env.IS_DEV) {
+        app.post('/hook', jsonParser, (req, res) => nodoka.LineBot(req, res));
+    } else {
+        app.post('/hook', line.middleware(conf.get('line-config')), (req, res) => nodoka.LineBot(req, res));
+    }
 
 }
 

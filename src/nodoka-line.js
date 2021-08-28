@@ -4,9 +4,7 @@ const util = require('./util.js');
 const postgres = require('./postgres.js');
 const nodoka = require('./nodoka-brain.js')
 
-const line = conf.get('line');
-const line_client = new line.Client(conf.get('line-config')); 
-
+const line_client = require('./nodoka-line-client.js').Create();
 
 
 // 消費を保存する
@@ -117,9 +115,9 @@ async function getConsumeSum() {
 async function handleEvent(ev) {
     
     const messages = ev.message.text.split('\n');
-    for(message of messages) {
-        console.log(message);
-    }
+    // for(message of messages) {
+    //     console.log(message);
+    // }
     switch(messages[0]) {
     case "消費":
         console.log("message consume");
@@ -139,13 +137,16 @@ async function handleEvent(ev) {
 
 
 
-exports.LineBot = function(req, res) {
+exports.LineBot = async function(req, res) {
     const r = new result.Result(200, '');
     r.response(res);
 
-    Promise
-    .all(req.body.events.map(handleEvent))
-    .then((result) => {console.log(result);});
+    for(ev of req.body.events) {
+        handleEvent(ev).await;
+    }
+    // Promise
+    // .all(req.body.events.map(handleEvent))
+    // .then((result) => {console.log(result);});
 };
     
 

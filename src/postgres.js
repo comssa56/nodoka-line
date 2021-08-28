@@ -1,12 +1,20 @@
+const util = require('./util.js');
 const conf = require('./config.js'); 
 const { Pool } = require('pg');
 const pool = new Pool(conf.get('pg-config'));
 
+const AsyncLock = require('async-lock');
+
+const lock = new AsyncLock({ timeout: 1000 * 30 });
+
 
 class Postgres {
+
     async init() {
-        this.client = await pool.connect();
-    }
+        await lock.acquire('my-lock', async () => {
+            this.client = await pool.connect();
+        });
+     }
 
     async exec(query, params = []) {
         return (await this.client.query(query, params)).rows;
@@ -22,6 +30,11 @@ class Postgres {
     }
 
     async begin() {
+        if(!this.client) {
+            // 何かnullの時がある？
+            await this.init();
+            console.log('warn: postgres client reinit');
+        }
         await this.client.query('BEGIN');
     }
 
