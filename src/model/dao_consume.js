@@ -1,4 +1,5 @@
 const postgres = require('../util/postgres.js');
+const util = require('../util/util.js');
 
 
 exports.insertConsume = async (kind, price) => {
@@ -33,6 +34,18 @@ exports.selectConsumeSum = async() => {
         + "GROUP BY kind, date ORDER BY kind, date",
         values: [],
     }
+    const r = await postgres.execJson(q);
+    return r;
+};
+
+exports.selectConsumeReceipt = async(yearmonth) => {
+    const q = {
+        text: "SELECT id, kind, price,  to_char(consume_time, 'YYYYMMDD') as date "
+        + "FROM tbl_consume "
+        + "WHERE date_trunc('month', consume_time) = '" + util.ShortStrDate(yearmonth).get().format() + "' "
+        + "ORDER BY consume_time ASC",
+        values:[],
+    };    
     const r = await postgres.execJson(q);
     return r;
 };

@@ -66,10 +66,33 @@ const event4 = {events : [
     },
 ]};
 
+const event5 = {events : [
+    {
+        replyToken: 'test10',
+        message : {
+            text : '消費明細\n20210',
+        },
+    },
+    {
+        replyToken: 'test11',
+        message : {
+            text : '消費明細\n202108',
+        },
+    },
+    {
+        replyToken: 'test12',
+        message : {
+            text : '消費明細\n202109',
+        },
+    },
+]};
+
+
 exports.Test = ()=>{
     const PORT = process.env.PORT || 8080;
     util.json_request('localhost', PORT, '/hook', 'POST', event1).await;
     util.json_request('localhost', PORT, '/hook', 'POST', event2).await;
     util.json_request('localhost', PORT, '/hook', 'POST', event3).await;
     util.json_request('localhost', PORT, '/hook', 'POST', event4).await;
+    util.json_request('localhost', PORT, '/hook', 'POST', event5).await;
 }

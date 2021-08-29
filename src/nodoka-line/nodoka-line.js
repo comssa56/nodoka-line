@@ -73,6 +73,37 @@ async function handleConsumeStat(ev, messages) {
 
 }
 
+async function handleConsumeReceipt(ev, messages) {
+    const yearmonth = messages[1];
+
+    const d = util.ShortStrDate(yearmonth);
+    if(yearmonth.length!=6 || !d) {
+        return line_client.replyMessage(
+            ev.replyToken, 
+            nodoka.createNodokaTextMessage("確認年月は半角数字6桁で入力してください")
+        );    
+    }
+
+    const results = await dao_consume.selectConsumeReceipt(yearmonth);
+    console.log(results);
+
+    if(results) {
+        let str ="";
+        for(row of results) {
+            str += "消費" + row.id + "\t" + row.kind + "\t" + row.price + "円\t" + row.date + "\n";
+        }
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage(str)
+        ); 
+    
+    } else {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("記録がありません")
+        ); 
+    }
+
+}
+
 
 async function handleEvent(ev) {
     
@@ -89,6 +120,9 @@ async function handleEvent(ev) {
     case "消費確認":
         console.log("message consume stat");
         return handleConsumeStat(ev, messages).await;
+    case "消費明細":
+        console.log("message consume receipt");
+        return handleConsumeReceipt(ev, messages).await;
     default:
         console.log("message default");
     }
