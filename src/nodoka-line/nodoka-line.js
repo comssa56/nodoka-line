@@ -77,7 +77,7 @@ async function handleConsumeReceipt(ev, messages) {
     const yearmonth = messages[1];
 
     const d = util.ShortStrDate(yearmonth);
-    if(yearmonth.length!=6 || !d) {
+    if(!yearmonth || yearmonth.length!=6 || !d) {
         return line_client.replyMessage(
             ev.replyToken, 
             nodoka.createNodokaTextMessage("確認年月は半角数字6桁で入力してください")

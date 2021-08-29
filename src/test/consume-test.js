@@ -85,6 +85,13 @@ const event5 = {events : [
             text : '消費明細\n202109',
         },
     },
+    {
+        replyToken: 'test13',
+        message : {
+            text : '消費明細\n',
+        },
+    },
+
 ]};
 
 
