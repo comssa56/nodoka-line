@@ -1,17 +1,15 @@
-const result = require('./result.js');
-const conf = require('./config.js');
-const util = require('./util.js');
-const postgres = require('./postgres.js');
+const result = require('../util/result.js');
+const util = require('../util/util.js');
 const nodoka = require('./nodoka-brain.js')
-
+const dao_consume = require('../model/dao_consume.js');
 const line_client = require('./nodoka-line-client.js').Create();
 
 
 // 消費を保存する
 async function handleConsume(ev, messages) {
-    const kind = messages[1];
-    const price = messages[2];
-    const day = messages[3];
+    const kind = messages[0];
+    const price = messages[1];
+    const day = messages[2];
 
     if(kind && price) 
     {
@@ -33,7 +31,7 @@ async function handleConsume(ev, messages) {
                 );    
             }
 
-            await createConsumeWithDate(kind, price, d.get().format());
+            await dao_consume.insertConsumeWithDate(kind, price, d.get().format());
             return line_client.broadcast(
                 nodoka.createNodokaTextMessage(messages + "\nを保存完了")
             );    
@@ -41,7 +39,7 @@ async function handleConsume(ev, messages) {
         }
         else
         {
-            await createConsume(kind, price);
+            await dao_consume.insertConsume(kind, price);
             return line_client.broadcast(
                 nodoka.createNodokaTextMessage(messages + "\nを保存完了")
             );    
@@ -55,7 +53,7 @@ async function handleConsume(ev, messages) {
 }
 
 async function handleConsumeStat(ev, messages) {
-    const results = await getConsumeSum();
+    const results = await dao_consume.selectConsumeSum();
     console.log(results);
 
     if(results) {
@@ -75,42 +73,6 @@ async function handleConsumeStat(ev, messages) {
 
 }
 
-async function createConsume(kind, price) {
-    console.log("consume:" + kind + "," + price);
- 
-    const q = {
-        text: 'INSERT INTO tbl_consume(kind, price) VALUES($1, $2)',
-        values: [kind, price],
-    }
-
-    const r = await postgres.execJson(q);
-    return r;
-};
-
-async function createConsumeWithDate(kind, price,date) {
-    console.log("consume:" + kind + "," + price + ',' + date);
- 
-    const q = {
-        text: 'INSERT INTO tbl_consume(kind, price, consume_time) VALUES($1, $2, $3)',
-        values: [kind, price, date],
-    }
-
-    const r = await postgres.execJson(q);
-    return r;
-};
-
-
-async function getConsumeSum() {
-    const q = {
-        text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') as date FROM " 
-        + "(SELECT kind, price, date_trunc('month', consume_time) as date FROM tbl_consume) A "
-        + "GROUP BY kind, date ORDER BY kind, date",
-        values: [],
-    }
-    const r = await postgres.execJson(q);
-    return r;
-};
-
 
 async function handleEvent(ev) {
     
@@ -119,7 +81,9 @@ async function handleEvent(ev) {
     //     console.log(message);
     // }
     switch(messages[0]) {
-    case "消費":
+    case "食費":
+    case "光熱費":
+    case "日用品":
         console.log("message consume");
         return handleConsume(ev, messages).await;
     case "消費確認":
@@ -144,9 +108,6 @@ exports.LineBot = async function(req, res) {
     for(ev of req.body.events) {
         handleEvent(ev).await;
     }
-    // Promise
-    // .all(req.body.events.map(handleEvent))
-    // .then((result) => {console.log(result);});
 };
     
 
