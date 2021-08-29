@@ -1,4 +1,4 @@
-const conf = require('./config.js');
+const conf = require('../util/config.js');
 const line = conf.get('line');
 const line_client = new line.Client(conf.get('line-config')); 
 
