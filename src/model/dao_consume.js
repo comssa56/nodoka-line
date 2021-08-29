@@ -40,7 +40,7 @@ exports.selectConsumeSum = async() => {
 
 exports.selectConsumeReceipt = async(yearmonth) => {
     const q = {
-        text: "SELECT id, kind, price,  to_char(consume_time, 'YYYYMMDD') as date "
+        text: "SELECT id, kind, price,  to_char(consume_time, 'DD') as date "
         + "FROM tbl_consume "
         + "WHERE date_trunc('month', consume_time) = '" + util.ShortStrDate(yearmonth).get().format() + "' "
         + "ORDER BY consume_time ASC",

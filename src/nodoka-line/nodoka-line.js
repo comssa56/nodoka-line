@@ -90,7 +90,7 @@ async function handleConsumeReceipt(ev, messages) {
     if(results) {
         let str ="";
         for(row of results) {
-            str += "消費" + row.id + "\t" + row.kind + "\t" + row.price + "円\t" + row.date + "\n";
+            str += "消費" + row.id + "\t" + row.kind + "\t" + row.price + "円\t" + row.date + "日\n";
         }
         return line_client.replyMessage(ev.replyToken, 
             nodoka.createNodokaTextMessage(str)
