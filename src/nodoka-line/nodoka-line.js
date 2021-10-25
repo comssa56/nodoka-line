@@ -114,7 +114,8 @@ async function handleEvent(ev) {
     case "食費":
     case "光熱費":
     case "日用品":
-        console.log("message consume");
+    case "育児":
+            console.log("message consume");
         return handleConsume(ev, messages).await;
     case "消費確認":
         console.log("message consume stat");
