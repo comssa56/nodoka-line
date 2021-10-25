@@ -103,6 +103,25 @@ async function handleConsumeReceipt(ev, messages) {
 
 }
 
+async function handleDeleteReceipt(ev, messages) {
+    console.log(messages[1]);
+    const id = Number(messages[1]);
+    console.log(id);
+
+    if(!id) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("idの指定は整数で行いましょう")
+        ); 
+    
+        return;
+    }
+
+    const results = await dao_consume.deleteConsumeReceipt(id);
+    console.log(results);
+    return line_client.replyMessage(ev.replyToken, 
+        nodoka.createNodokaTextMessage("" + id + "の取り消しをしました")
+    ); 
+}
 
 async function handleEvent(ev) {
     
@@ -123,6 +142,9 @@ async function handleEvent(ev) {
     case "消費明細":
         console.log("message consume receipt");
         return handleConsumeReceipt(ev, messages).await;
+    case "消費削除":
+        console.log("message delete receipt");
+        return handleDeleteReceipt(ev, messages).await;
     default:
         console.log("message default");
     }

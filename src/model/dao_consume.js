@@ -49,3 +49,14 @@ exports.selectConsumeReceipt = async(yearmonth) => {
     const r = await postgres.execJson(q);
     return r;
 };
+
+exports.deleteConsumeReceipt = async(id) => {
+    const q = {
+        text: "DELETE "
+        + "FROM tbl_consume "
+        + "WHERE id=$1",
+        values:[id],
+    };    
+    const r = await postgres.execJson(q);
+    return r;
+}
