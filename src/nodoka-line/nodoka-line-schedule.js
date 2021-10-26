@@ -43,7 +43,7 @@ exports.handleScheduleCheck = async (ev, messages) => {
 
     // 本日以降の予定
     if(!day) {
-        from = moment().format('YYYY-MM-DD 00:00:00');
+        from = moment().format('YYYY-MM-DD 00:00:00+09');
         results = await dao_schedule.selectScheduleFrom(from);
     } else {
         // 指定日の予定
@@ -55,8 +55,8 @@ exports.handleScheduleCheck = async (ev, messages) => {
             );    
         }
 
-        const from = d.get().format('YYYY-MM-DD 00:00:00');
-        const to = d.get().format('YYYY-MM-DD 24:00:00');
+        const from = d.get().format('YYYY-MM-DD 00:00:00+09');
+        const to = d.get().format('YYYY-MM-DD 24:00:00+09');
         results = await dao_schedule.selectScheduleBetween(from, to);
 
     }
