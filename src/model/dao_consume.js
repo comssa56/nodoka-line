@@ -42,10 +42,10 @@ exports.selectConsumeReceipt = async(yearmonth) => {
     const q = {
         text: "SELECT id, kind, price,  to_char(consume_time, 'DD') as date "
         + "FROM tbl_consume "
-        + "WHERE date_trunc('month', consume_time) = '" + util.ShortStrDate(yearmonth).get().format() + "' "
+        + "WHERE to_char(consume_time, 'YYYYMM') = $1 "
         + "ORDER BY consume_time ASC",
-        values:[],
-    };    
+        values:[yearmonth],
+    };    ''
     const r = await postgres.execJson(q);
     return r;
 };
