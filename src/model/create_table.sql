@@ -8,3 +8,14 @@ CREATE TABLE tbl_consume (
 CREATE INDEX ON tbl_consume(kind);
 CREATE INDEX ON tbl_consume(consume_time);
 CREATE INDEX ON tbl_consume(insert_time);
+
+
+CREATE TABLE tbl_schedule (
+    id     SERIAL PRIMARY KEY,
+    title  TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '', 
+    schedule_time TIMESTAMP NOT NULL,
+    insert_time TIMESTAMP NOT NULL DEFAULT now()
+);
+CREATE INDEX ON tbl_schedule (title);
+CREATE INDEX ON tbl_schedule (schedule_time);

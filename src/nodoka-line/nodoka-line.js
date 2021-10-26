@@ -2,6 +2,7 @@ const result = require('../util/result.js');
 const nodoka = require('./nodoka-brain.js')
 const line_client = require('./nodoka-line-client.js').Create();
 const consume = require('./nodoka-line-consume.js');
+const schedule = require('./nodoka-line-schedule.js');
 
 async function handleEvent(ev) {
     
@@ -25,6 +26,14 @@ async function handleEvent(ev) {
     case "消費削除":
         console.log("message delete receipt");
         return consume.handleDeleteReceipt(ev, messages).await;
+    case "予定":
+        console.log("message add schedule");
+        return schedule.handleScheduleAdd(ev, messages).await;
+        break;
+    case "予定確認":
+        console.log("message check schedule");
+        return schedule.handleScheduleCheck(ev, messages).await;
+        break;
     default:
         console.log("message default");
     }
