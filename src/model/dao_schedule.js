@@ -15,6 +15,8 @@ exports.insertSchedule = async (time, title, description) => {
 };
 
 exports.selectScheduleBetween = async (from,to) => { 
+    console.log(`from:${from}`);
+    console.log(`to:${to}`);
     const q = {
         text: 'SELECT id, to_char(schedule_time, \'YYYY/MM/DD\') as schedule_time, title, description '
              + 'FROM '+  TBL_NAME + ' '
