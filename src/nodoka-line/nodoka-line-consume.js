@@ -6,6 +6,12 @@ const line_client = require('./nodoka-line-client.js').Create();
 
 // 消費を保存する
 exports.handleConsume = async (ev, messages) => {
+    if(!messages[1]) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("値段\n消費年月日(任意)\nを指定してください")
+        ); 
+    }
+
     const kind = messages[0];
     const price = messages[1];
     const day = messages[2];
@@ -73,6 +79,12 @@ exports.handleConsumeStat = async (ev, messages) => {
 }
 
 exports.handleConsumeReceipt = async(ev, messages) => {
+    if(!messages[1]) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("確認年月\nを指定してください")
+        ); 
+    }
+
     const yearmonth = messages[1];
 
     if(!yearmonth || yearmonth.length!=6 || !util.ShortStrDate(yearmonth)) {
@@ -103,13 +115,17 @@ exports.handleConsumeReceipt = async(ev, messages) => {
 }
 
 exports.handleDeleteReceipt = async(ev, messages) => {
-    console.log(messages[1]);
-    const id = Number(messages[1]);
-    console.log(id);
 
+    if(!messages[1]) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("消したい明細番号\nを指定してください")
+        ); 
+    }
+
+    const id = Number(messages[1]);
     if(!id) {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createNodokaTextMessage("idの指定は整数で行いましょう")
+            nodoka.createNodokaTextMessage("idの指定は整数でお願いします")
         ); 
     
         return;
@@ -117,7 +133,7 @@ exports.handleDeleteReceipt = async(ev, messages) => {
 
     const results = await dao_consume.deleteConsumeReceipt(id);
     console.log(results);
-    return line_client.replyMessage(ev.replyToken, 
+    return line_client.broadcast(ev.replyToken, 
         nodoka.createNodokaTextMessage("" + id + "の取り消しをしました")
     ); 
 }

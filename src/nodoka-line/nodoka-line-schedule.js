@@ -7,6 +7,12 @@ const moment = require("moment");
 
 // 予定を保存する
 exports.handleScheduleAdd = async (ev, messages) => {
+    if(!messages[1]) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("予定年月日\n題名\n説明(任意)\nを指定してください")
+        ); 
+    }
+
     const day = messages[1];
     const title = messages[2];
     let description = messages[3];
