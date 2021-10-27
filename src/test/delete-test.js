@@ -1,10 +1,6 @@
 const util = require('../util/util.js');
 const postgres = require('../util/postgres.js');
 
-
-
-
-
 exports.Test = async ()=>{
     const PORT = process.env.PORT || 8080;
 

@@ -1,5 +1,4 @@
 const util = require('../util/util.js');
-const postgres = require('../util/postgres.js');
 
 const event1 = {events : [
     {
