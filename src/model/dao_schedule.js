@@ -16,7 +16,7 @@ exports.insertSchedule = async (time, title, description) => {
 
 exports.selectScheduleBetween = async (from,to) => { 
     const q = {
-        text: 'SELECT id, to_char(schedule_time, \'YYYYMMDD\') as schedule_time, title, description '
+        text: 'SELECT id, to_char(schedule_time, \'YYYY/MM/DD\') as schedule_time, title, description '
              + 'FROM '+  TBL_NAME + ' '
              + 'WHERE  tstzrange($1, $2, \'[)\') @> schedule_time '
              + 'ORDER BY schedule_time ',
@@ -29,7 +29,7 @@ exports.selectScheduleBetween = async (from,to) => {
 
 exports.selectScheduleFrom = async (from) => { 
     const q = {
-        text: 'SELECT id, to_char(schedule_time, \'YYYYMMDD\') as schedule_time, title, description '
+        text: 'SELECT id, to_char(schedule_time, \'YYYY/MM/DD\') as schedule_time, title, description '
              + 'FROM '+  TBL_NAME + ' '
              + 'WHERE schedule_time > $1 '
              + 'ORDER BY schedule_time ',

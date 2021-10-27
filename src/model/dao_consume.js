@@ -29,7 +29,7 @@ exports.insertConsumeWithDate = async (kind, price,date) => {
 
 exports.selectConsumeSum = async() => {
     const q = {
-        text: "SELECT kind, sum(price), to_char(date, 'YYYYMM') as date FROM " 
+        text: "SELECT kind, sum(price), to_char(date, 'YYYY/MM') as date FROM " 
         + "(SELECT kind, price, date_trunc('month', consume_time) as date FROM tbl_consume) A "
         + "GROUP BY kind, date ORDER BY kind, date",
         values: [],
