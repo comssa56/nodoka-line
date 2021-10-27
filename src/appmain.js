@@ -5,13 +5,12 @@ conf.init();
 
 const result = require('./util/result.js');
 const nodoka = require('./nodoka-line/nodoka-line.js');
+const nodoka_cron = require('./nodoka-line/nodoka-cron.js');
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 const line = conf.get('line');
-
-const line_client = require('./nodoka-line/nodoka-line-client.js').Create();
 
 const test = require('./test/test.js');
 
@@ -45,6 +44,12 @@ const routing = function(app)
     app.get('/db_test', async (req, res) => {
         const r = new result.Result(200, 'Hello, world!');
         await db_connect_test();
+        r.response(res);
+    });
+
+    app.get('/cron', async (req, res) => {
+        await nodoka_cron.DailyCron();
+        const r = new result.Result(200, 'Hello, world!');
         r.response(res);
     });
 
