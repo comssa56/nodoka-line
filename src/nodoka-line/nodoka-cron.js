@@ -12,7 +12,7 @@ async function DailySchedule() {
 
     const results = await dao_schedule.selectScheduleBetween(from, to);
 
-    let str =`${m.format('MM/DD')}の予定…`;
+    let str =`${m.format('MM/DD')}の予定…\n`;
     if(results && results.length>0) {
         console.log(results);
         for(row of results) {
