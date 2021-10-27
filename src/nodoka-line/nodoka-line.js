@@ -13,7 +13,7 @@ const EVENT = {
     CONSUME_STAT : '消費確認',
     CONSUME_RECEIPT : '消費明細',
     CONSUME_REJECT : '消費削除',
-    SCHEDULE_ADD : '予定',
+    SCHEDULE_ADD : '予定追加',
     SCHEDULE_CHECK : '予定確認',
 
     COMMAND_LIST : 'ヘルプ',
