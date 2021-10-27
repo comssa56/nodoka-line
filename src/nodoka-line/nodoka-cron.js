@@ -5,15 +5,16 @@ const line_client = require('./nodoka-line-client.js').Create();
 const moment = require("moment");
 
 async function DailySchedule() {
-    const m = moment();
+    const m = moment().add(1, 'days'); 
+    console.log(m);
     const from = m.get().format('YYYY-MM-DD 00:00:00+09');
     const to = m.get().format('YYYY-MM-DD 24:00:00+09');
 
     const results = await dao_schedule.selectScheduleBetween(from, to);
 
+    let str =`${m.format('MM/DD')}の予定…`;
     if(results && results.length>0) {
         console.log(results);
-        let str ="本日の予定…";
         for(row of results) {
             str += `・${row.title},\t${row.description}\n`;
         }
@@ -22,7 +23,7 @@ async function DailySchedule() {
         );         
     } else {
         return line_client.broadcast(
-            nodoka.createNodokaTextMessage("本日は予定がありません")
+            nodoka.createNodokaTextMessage(`${str}がありません`)
         ); 
     }    
 }
