@@ -44,27 +44,26 @@ exports.handleScheduleAdd = async (ev, messages) => {
 }
 
 exports.handleScheduleCheck = async (ev, messages) => {
-    const day = messages[1];
+    const mon = messages[1];
     let results = null;
 
     // 本日以降の予定
-    if(!day) {
+    if(!mon) {
         from = moment().format('YYYY-MM-DD 00:00:00+09');
         results = await dao_schedule.selectScheduleFrom(from);
     } else {
-        // 指定日の予定
-        const d = util.ShortStrDate(day);
-        if(day.length!=8 || !d) {
+        // 指定月の予定
+        const d = util.ShortStrDate(mon);
+        if(mon.length!=6 || !d) {
             return line_client.replyMessage(
                 ev.replyToken, 
-                nodoka.createNodokaTextMessage("日付(半角数字8桁)\nで入力してください")
+                nodoka.createNodokaTextMessage("年月(半角数字6桁)\nで入力してください")
             );    
         }
 
-        const from = d.get().format('YYYY-MM-DD 00:00:00+09');
-        const to = d.get().format('YYYY-MM-DD 24:00:00+09');
+        const from = d.get().format('YYYY-MM-01 00:00:00+09');
+        const to = d.get().add(1, 'month').format('YYYY-MM-01 00:00:00+09');
         results = await dao_schedule.selectScheduleBetween(from, to);
-
     }
 
     if(results && results.length>0) {
