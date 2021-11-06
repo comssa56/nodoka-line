@@ -4,7 +4,7 @@ const dao_schedule = require('../model/dao_schedule.js');
 const line_client = require('./nodoka-line-client.js').Create();
 const moment = require("moment");
 
-async function DailySchedule(datem) {
+async function dailySchedule(datem) {
     console.log(datem);
     const from = datem.get().format('YYYY-MM-DD 00:00:00+09');
     const to = datem.get().format('YYYY-MM-DD 24:00:00+09');
@@ -29,6 +29,6 @@ async function DailySchedule(datem) {
 
 
 // date : moment
-exports.DailyCron = async (datem) => {
-    await DailySchedule(datem);
+exports.dailyCron = async (datem) => {
+    await dailySchedule(datem);
 }
