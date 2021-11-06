@@ -71,7 +71,7 @@ exports.handleScheduleCheck = async (ev, messages) => {
         console.log(results);
         let str ="";
         for(row of results) {
-            str += `・${row.schedule_time},\t${row.title},\t${row.description},\t予定${row.id}\n`;
+            str += `■${row.schedule_time},\t${row.title},\t${row.description},\t予定${row.id}\n`;
         }
         return line_client.replyMessage(ev.replyToken, 
             nodoka.createNodokaTextMessage(str)
