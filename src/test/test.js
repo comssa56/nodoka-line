@@ -22,7 +22,8 @@ async function HelpTest() {
 exports.Test = ()=> {
 //    consume_test.Test();
 //    delete_test.Test();
+//    schedule_test.Test();
 //    schedule_test.Test2();
-
+//    schedule_test.deleteTest();
     HelpTest().await;
 }
