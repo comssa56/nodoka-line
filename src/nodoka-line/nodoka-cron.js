@@ -4,15 +4,14 @@ const dao_schedule = require('../model/dao_schedule.js');
 const line_client = require('./nodoka-line-client.js').Create();
 const moment = require("moment");
 
-async function DailySchedule() {
-    const m = moment().add(1, 'days'); 
-    console.log(m);
-    const from = m.get().format('YYYY-MM-DD 00:00:00+09');
-    const to = m.get().format('YYYY-MM-DD 24:00:00+09');
+async function DailySchedule(datem) {
+    console.log(datem);
+    const from = datem.get().format('YYYY-MM-DD 00:00:00+09');
+    const to = datem.get().format('YYYY-MM-DD 24:00:00+09');
 
     const results = await dao_schedule.selectScheduleBetween(from, to);
 
-    let str =`${m.format('MM/DD')}の予定…\n`;
+    let str =`${datem.format('MM/DD')}の予定…\n`;
     if(results && results.length>0) {
         console.log(results);
         for(row of results) {
@@ -29,6 +28,7 @@ async function DailySchedule() {
 }
 
 
-exports.DailyCron = async () => {
-    await DailySchedule();
+// date : moment
+exports.DailyCron = async (datem) => {
+    await DailySchedule(datem);
 }

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "cron": "node cron.js",
     "test": "test"
   },
   "repository": {

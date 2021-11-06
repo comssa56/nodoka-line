@@ -48,7 +48,8 @@ const routing = function(app)
     });
 
     app.get('/cron', async (req, res) => {
-        await nodoka_cron.DailyCron();
+        const m = moment().add(1, 'days'); 
+        await nodoka_cron.DailyCron(m);
         const r = new result.Result(200, 'Hello, world!');
         r.response(res);
     });
