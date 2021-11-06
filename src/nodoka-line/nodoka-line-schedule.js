@@ -9,7 +9,7 @@ const moment = require("moment");
 exports.handleScheduleAdd = async (ev, messages) => {
     if(!messages[1]) {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createNodokaTextMessage("予定年月日\n題名\n説明(任意)\nを指定してください")
+            nodoka.createNodokaTextMessage("2行目以降に予定年月日\n題名\n説明(任意)\nを指定してください")
         ); 
     }
 
@@ -23,7 +23,7 @@ exports.handleScheduleAdd = async (ev, messages) => {
         if(!title || day.length!=8 || !d) {
             return line_client.replyMessage(
                 ev.replyToken, 
-                nodoka.createNodokaTextMessage("日付(半角数字8桁)\n予定名\n説明(任意、1行)\nで入力してください")
+                nodoka.createNodokaTextMessage("2行目には日付(半角数字8桁)\n予定名\n説明(任意、1行)\nで入力してください")
             );    
         }
 
@@ -33,13 +33,13 @@ exports.handleScheduleAdd = async (ev, messages) => {
 
         await dao_schedule.insertSchedule(d.get().format(), title, description);
         return line_client.broadcast(
-            nodoka.createNodokaTextMessage(messages + "\nを保存完了")
+            nodoka.createNodokaTextMessage(messages + "\nを保存完了しました")
         );            
     }
 
     return line_client.replyMessage(
         ev.replyToken, 
-        nodoka.createNodokaTextMessage("日付(半角数字8桁)\n予定名\n説明(任意、1行)\nで入力してください")
+        nodoka.createNodokaTextMessage("2行目には日付(半角数字8桁)\n予定名\n説明(任意、1行)\nで入力してください")
     ); 
 }
 
@@ -57,7 +57,7 @@ exports.handleScheduleCheck = async (ev, messages) => {
         if(mon.length!=6 || !d) {
             return line_client.replyMessage(
                 ev.replyToken, 
-                nodoka.createNodokaTextMessage("年月(半角数字6桁)\nで入力してください")
+                nodoka.createNodokaTextMessage("2行目には年月(半角数字6桁)\nを入力してください")
             );    
         }
 
@@ -87,7 +87,7 @@ exports.handleDeleteScheduleById = async(ev, messages) => {
 
     if(!messages[1]) {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createNodokaTextMessage("消したい予定番号\nを指定してください")
+            nodoka.createNodokaTextMessage("2行目には消したい予定番号\nを指定してください")
         ); 
     }
 
@@ -113,7 +113,7 @@ exports.handleDeleteScheduleByDate = async(ev, messages) => {
     const day =messages[1];
     if(!day) {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createNodokaTextMessage("消したい予定の年月日\nを指定してください")
+            nodoka.createNodokaTextMessage("2行目には消したい予定の年月日\nを指定してください")
         ); 
     }
 
@@ -122,7 +122,7 @@ exports.handleDeleteScheduleByDate = async(ev, messages) => {
     if(day.length!=8 || !d) {
         return line_client.replyMessage(
             ev.replyToken, 
-            nodoka.createNodokaTextMessage("日付(半角数字8桁)\nで入力してください")
+            nodoka.createNodokaTextMessage("2行目には日付(半角数字8桁)\nで入力してください")
         );    
     }
 

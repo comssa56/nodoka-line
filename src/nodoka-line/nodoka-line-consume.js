@@ -8,7 +8,7 @@ const line_client = require('./nodoka-line-client.js').Create();
 exports.handleConsume = async (ev, messages) => {
     if(!messages[1]) {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createNodokaTextMessage("値段\n消費年月日(任意)\nを指定してください")
+            nodoka.createNodokaTextMessage("2行目以降には値段\n消費年月日(任意)\nを指定してください")
         ); 
     }
 
@@ -21,7 +21,7 @@ exports.handleConsume = async (ev, messages) => {
         if(!util.isIntStr(price)) {
             return line_client.replyMessage(
                 ev.replyToken, 
-                nodoka.createNodokaTextMessage("価格は半角数字だけで記載してください")
+                nodoka.createNodokaTextMessage("2行目の価格は半角数字だけで記載してください")
             );    
         }
 
@@ -32,7 +32,7 @@ exports.handleConsume = async (ev, messages) => {
             if(day.length!=8 || !d) {
                 return line_client.replyMessage(
                     ev.replyToken, 
-                    nodoka.createNodokaTextMessage("日付は半角数字8桁で入力してください")
+                    nodoka.createNodokaTextMessage("3行目には日付を半角数字8桁で入力してください")
                 );    
             }
 
@@ -81,7 +81,7 @@ exports.handleConsumeStat = async (ev, messages) => {
 exports.handleConsumeReceipt = async(ev, messages) => {
     if(!messages[1]) {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createNodokaTextMessage("確認年月\nを指定してください")
+            nodoka.createNodokaTextMessage("2行目には確認年月\nを指定してください")
         ); 
     }
 
@@ -90,7 +90,7 @@ exports.handleConsumeReceipt = async(ev, messages) => {
     if(!yearmonth || yearmonth.length!=6 || !util.ShortStrDate(yearmonth)) {
         return line_client.replyMessage(
             ev.replyToken, 
-            nodoka.createNodokaTextMessage("確認年月は半角数字6桁で入力してください")
+            nodoka.createNodokaTextMessage("2行目の確認年月は半角数字6桁で入力してください")
         );    
     }
 
