@@ -71,7 +71,7 @@ exports.handleScheduleCheck = async (ev, messages) => {
         console.log(results);
         let str ="";
         for(row of results) {
-            str += row.schedule_time + ",\t" + row.title + ",\t" + row.description + "\n";
+            str += `予定${row.id},\t${row.schedule_time},\t${row.title},\t${row.description}\n`;
         }
         return line_client.replyMessage(ev.replyToken, 
             nodoka.createNodokaTextMessage(str)
@@ -84,3 +84,27 @@ exports.handleScheduleCheck = async (ev, messages) => {
 
 }
 
+exports.handleDeleteSchedule = async(ev, messages) => {
+
+    if(!messages[1]) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("消したい予定番号\nを指定してください")
+        ); 
+    }
+
+    const id = Number(messages[1]);
+    console.log(id);
+    if(!id) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("idの指定は整数でお願いします")
+        ); 
+    
+        return;
+    }
+
+    const results = await dao_schedule.deleteSchedule(id);
+    console.log(results);
+    return line_client.broadcast(
+        nodoka.createNodokaTextMessage("予定" + id + "の取り消しをしました")
+    ); 
+}

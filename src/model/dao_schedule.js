@@ -40,3 +40,15 @@ exports.selectScheduleFrom = async (from) => {
     const r = await postgres.execJson(q);
     return r;
 };
+
+
+exports.deleteSchedule = async(id) => {
+    const q = {
+        text: `DELETE `
+        + `FROM ${TBL_NAME} `
+        + `WHERE id=$1 `,
+        values:[id],
+    };    
+    const r = await postgres.execJson(q);
+    return r;
+}

@@ -15,6 +15,7 @@ const EVENT = {
     CONSUME_REJECT : '消費削除',
     SCHEDULE_ADD : '予定追加',
     SCHEDULE_CHECK : '予定確認',
+    SCHEDULE_REJECT : '予定削除',
 
     COMMAND_LIST : 'ヘルプ',
 };
@@ -47,7 +48,10 @@ async function handleEvent(ev) {
     case EVENT.SCHEDULE_CHECK:
         console.log("message check schedule");
         return schedule.handleScheduleCheck(ev, messages).await;
-
+    case EVENT.SCHEDULE_REJECT:
+        console.log("message delete schedule");
+        return schedule.handleDeleteSchedule(ev, messages).await;
+    
     case EVENT.COMMAND_LIST:
         {
             let str = "使える機能は…\n";
