@@ -17,8 +17,18 @@ const EVENT = {
     SCHEDULE_CHECK : '予定確認',
     SCHEDULE_REJECT : '予定削除',
 
+    CHEER_KAWAII : 'かわいい',
+    CHEER_KAWAII2 : '可愛い',
+    CHEER_ERAI : 'えらい',
+    CHEER_ERAI2 : '偉い',
+
     COMMAND_LIST : 'ヘルプ',
 };
+
+function isMatch(str, str2) {
+    r = str.search(str2);
+    return r==0 ? true : false;
+}
 
 async function handleEvent(ev) {
     
@@ -63,9 +73,24 @@ async function handleEvent(ev) {
             )
         }
     default:
-        console.log("message default");
     }
 
+    // 前方一致でコマンドを探す
+    const c = messages[0];
+    if(isMatch(c, EVENT.CHEER_KAWAII)
+    || isMatch(c, EVENT.CHEER_KAWAII2)) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage('当然'),
+        );
+    } else if(isMatch(c, EVENT.CHEER_ERAI)
+    || isMatch(c, EVENT.CHEER_ERAI2)) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage('デレシシシ'),
+        );
+    }
+
+
+    console.log("message default");
     const pro =  await line_client.getProfile(ev.source.userId);
     return line_client.replyMessage(ev.replyToken, 
         nodoka.createNodokaTextMessage(`${pro.displayName}さん、今「${ev.message.text}」って言いました`),

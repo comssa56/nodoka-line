@@ -1,6 +1,7 @@
 const consume_test = require('./consume-test.js');
 const delete_test = require('./delete-test.js');
 const schedule_test = require('./schedule-test.js');
+const others_test = require('./others-test.js');
 
 const util = require('../util/util.js');
 
@@ -25,5 +26,6 @@ exports.Test = ()=> {
 //    schedule_test.Test();
 //    schedule_test.Test2();
 //    schedule_test.deleteTestByDate();
-    HelpTest().await;
+    others_test.Test();
+//    HelpTest().await;
 }
