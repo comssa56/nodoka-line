@@ -52,3 +52,13 @@ exports.deleteSchedule = async(id) => {
     const r = await postgres.execJson(q);
     return r;
 }
+exports.deleteScheduleBetween = async(from,to) => {
+    const q = {
+        text: `DELETE `
+        + `FROM ${TBL_NAME} `
+        + `WHERE tstzrange($1, $2, \'[)\') @> schedule_time  `,
+        values:[from, to],
+    };    
+    const r = await postgres.execJson(q);
+    return r;
+}

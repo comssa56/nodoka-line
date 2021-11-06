@@ -50,7 +50,7 @@ async function handleEvent(ev) {
         return schedule.handleScheduleCheck(ev, messages).await;
     case EVENT.SCHEDULE_REJECT:
         console.log("message delete schedule");
-        return schedule.handleDeleteSchedule(ev, messages).await;
+        return schedule.handleDeleteScheduleByDate(ev, messages).await;
     
     case EVENT.COMMAND_LIST:
         {

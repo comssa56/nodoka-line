@@ -84,7 +84,7 @@ exports.handleScheduleCheck = async (ev, messages) => {
 
 }
 
-exports.handleDeleteSchedule = async(ev, messages) => {
+exports.handleDeleteScheduleById = async(ev, messages) => {
 
     if(!messages[1]) {
         return line_client.replyMessage(ev.replyToken, 
@@ -106,5 +106,33 @@ exports.handleDeleteSchedule = async(ev, messages) => {
     console.log(results);
     return line_client.broadcast(
         nodoka.createNodokaTextMessage("予定" + id + "の取り消しをしました")
+    ); 
+}
+
+exports.handleDeleteScheduleByDate = async(ev, messages) => {
+
+    const day =messages[1];
+    if(!day) {
+        return line_client.replyMessage(ev.replyToken, 
+            nodoka.createNodokaTextMessage("消したい予定の年月日\nを指定してください")
+        ); 
+    }
+
+    // 指定日の予定
+    const d = util.ShortStrDate(day);
+    if(day.length!=8 || !d) {
+        return line_client.replyMessage(
+            ev.replyToken, 
+            nodoka.createNodokaTextMessage("日付(半角数字8桁)\nで入力してください")
+        );    
+    }
+
+    const from = d.get().format('YYYY-MM-DD 00:00:00+09');
+    const to = d.get().format('YYYY-MM-DD 24:00:00+09');
+
+    const results = await dao_schedule.deleteScheduleBetween(from, to);
+    console.log(results);
+    return line_client.broadcast(
+        nodoka.createNodokaTextMessage(`${d.get().format('YYYY/MM/DD')}の予定の取り消しをしました`)
     ); 
 }

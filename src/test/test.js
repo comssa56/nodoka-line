@@ -24,6 +24,6 @@ exports.Test = ()=> {
 //    delete_test.Test();
 //    schedule_test.Test();
 //    schedule_test.Test2();
-//    schedule_test.deleteTest();
+//    schedule_test.deleteTestByDate();
     HelpTest().await;
 }

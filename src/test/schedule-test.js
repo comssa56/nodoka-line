@@ -95,7 +95,7 @@ exports.Test2 = async ()=>{
 
 
 // DELETE
-exports.deleteTest = async ()=>{
+exports.deleteTestById = async ()=>{
     const PORT = process.env.PORT || 8080;
 
     const seq_q = {
@@ -143,3 +143,51 @@ exports.deleteTest = async ()=>{
 
 }
 
+
+exports.deleteTestByDate = async ()=>{
+    const PORT = process.env.PORT || 8080;
+
+    const seq_q = {
+        text: 'SELECT * FROM tbl_schedule_id_seq;',
+        values: [],
+    };
+    
+    const data_q = {
+        text: 'INSERT INTO tbl_schedule(title, description, schedule_time) VALUES($1, $2, $3)',
+        values: ['昼ごはん', 'ラーメン', '2000-01-01'],
+    };
+
+    let last_value = -1;
+
+    const db = await postgres.getDBAccessor();
+    try {
+        await db.begin();
+        await db.execJson(data_q);
+        const r = await db.execJson(seq_q);
+        console.log(r);
+        await db.commit();
+        console.log("commit");
+        last_value = r[0]['last_value'];
+    } catch(e) {
+        console.log(e);
+        await db.rollback();
+        console.log("rollback");
+    } finally {
+        await db.release();
+        console.log("release");
+    }
+
+    if(last_value>0)
+    {
+        const event1 = {events : [
+            {
+                replyToken: 'test1',
+                message : {
+                    text : '予定削除\n20000101',
+                },
+            },
+        ]};
+        util.json_request('localhost', PORT, '/hook', 'POST', event1).await;               
+    }
+
+}
