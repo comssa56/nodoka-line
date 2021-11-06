@@ -85,7 +85,7 @@ async function handleEvent(ev) {
     } else if(isMatch(c, EVENT.CHEER_ERAI)
     || isMatch(c, EVENT.CHEER_ERAI2)) {
         return line_client.replyMessage(ev.replyToken, 
-            nodoka.createNodokaTextMessage('デレシシシ'),
+            nodoka.createNodokaTextMessage('照れる'),
         );
     }
 
