@@ -11,6 +11,10 @@ class NodokaLineClient {
         line_client.broadcast(message);
     }
 
+    getProfile(userId) {
+        return line_client.getProfile(message);
+    }
+
 }
 
 exports.Create = ()=>{
