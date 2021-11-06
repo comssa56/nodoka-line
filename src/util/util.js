@@ -107,3 +107,7 @@ exports.json_request = async (host, port, path, method, body)=> {
     await json_request(host, port, path, method, body);
 };
 
+
+exports.getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
+}

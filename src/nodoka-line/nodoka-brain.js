@@ -1,6 +1,18 @@
+const util = require('../util/util.js');
+
+const suffix = [
+    'だっちゃ',
+    'だなも',
+    'なり',
+    'クポ',
+    'じゃけぇ',
+    'でやんす',
+    'ぜよ'
+];
 
 function strNodokafy(text) {
-    return text + "だなも";
+    const sel =  util.getRandomInt(suffix.length);
+    return text + suffix[sel];
 }
 
 function createNodokaTextMessage(message) {
