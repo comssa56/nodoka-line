@@ -12,7 +12,7 @@ class NodokaLineClient {
     }
 
     getProfile(userId) {
-        return line_client.getProfile(message);
+        return line_client.getProfile(userId);
     }
 
 }
