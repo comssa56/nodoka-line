@@ -133,7 +133,7 @@ exports.handleDeleteReceipt = async(ev, messages) => {
 
     const results = await dao_consume.deleteConsumeReceipt(id);
     console.log(results);
-    return line_client.broadcast(ev.replyToken, 
-        nodoka.createNodokaTextMessage("" + id + "の取り消しをしました")
+    return line_client.broadcast(
+        nodoka.createNodokaTextMessage("消費" + id + "の取り消しをしました")
     ); 
 }
