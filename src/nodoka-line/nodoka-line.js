@@ -30,6 +30,14 @@ function isMatch(str, str2) {
     return r==0 ? true : false;
 }
 
+const createOumuGaeshiCallBack = (replyToken, addText) => {
+    return (pro) => {
+        line_client.replyMessage(replyToken, 
+            nodoka.createNodokaTextMessage(`${pro.displayName}さん、今「${addText}」って言いました`),
+        );
+    }
+}
+
 async function handleEvent(ev) {
     
     const messages = ev.message.text.split('\n');
@@ -91,12 +99,10 @@ async function handleEvent(ev) {
 
 
     console.log("message default");
-    const pro =  await line_client.getProfile(ev.source.userId);
-    return line_client.replyMessage(ev.replyToken, 
-        nodoka.createNodokaTextMessage(`${pro.displayName}さん、今「${ev.message.text}」って言いました`),
-    )
+    return line_client.getProfile(ev.source.userId)
+    .then(createOumuGaeshiCallBack(ev.replyToken, ev.message.text))
+    .catch((err)=>{console.log(err);});
 }
-
 
 
 exports.LineBot = async function(req, res) {

@@ -18,6 +18,9 @@ const event1 = {events : [
         message : {
             text : 'ね',
         },
+        source : {
+            userId : 'xxxx'
+        }
     },
     {
         replyToken: 'test4',
