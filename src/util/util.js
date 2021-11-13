@@ -1,7 +1,6 @@
 const moment = require("moment");
 const http = require('http');
 
-
 class ShortStrDate {
     constructor(year, month, day) {
         if(!year) year = '1970';
@@ -20,23 +19,23 @@ class ShortStrDate {
 * 返り値はmoment or null(引数が不正)
 */
 exports.ShortStrDate = function(str) {
-
     let year = null;
     let month = null;
     let day = null;
-    switch(str.length) {
-    case 4:
+
+    switch(true) {
+    case /^[0-9]{4}$/.test(str):
         r = str.match(/([0-9]{4})/);
         if(!r) return null;
         year = r[1];
         break;
-    case 6:
+    case /^[0-9]{6}$/.test(str):
         r = str.match(/([0-9]{4})([0-9]{2})/);
         if(!r) return null;
         year = r[1];
         month = r[2];
         break;
-    case 8:
+    case /^[0-9]{8}$/.test(str):
         r = str.match(/([0-9]{4})([0-9]{2})([0-9]{2})/);
         if(!r) return null;
         year = r[1];
@@ -45,7 +44,7 @@ exports.ShortStrDate = function(str) {
         break;
     default:
         return null;
-    }
+    }      
 
     return new ShortStrDate(year, month, day);
 }
