@@ -1,7 +1,7 @@
-import { WebhookEvent, MessageEvent, TextMessage } from '@line/bot-sdk';
+import { WebhookEvent } from '@line/bot-sdk';
 import { NodokaLine2MessageEvent } from './nodoka-line2-message-event';
 
-export class NodokaLine2Test {
+export class NodokaLine2WebhookEvent {
     private ev : WebhookEvent;
 
     constructor(ev_ : WebhookEvent) {
